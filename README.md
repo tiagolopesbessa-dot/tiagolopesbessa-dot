@@ -6,7 +6,7 @@ Este projeto prático teve como objetivo implementar e documentar ataques simula
 ## Configuração do Ambiente
 O ambiente de teste foi configurado utilizando máquinas virtuais (VMs) no VirtualBox, conectadas por uma rede Host-Only para simular um ambiente isolado.
 
-* Atacante: Kali Linux (IP: 192.168.0.5)
+* Atacante: Kali Linux
 * Alvos Vulneráveis: Metasploitable 2 e DVWA.
 
 O escaneamento inicial do ambiente foi realizado com o nmap para identificar os IPs ativos e os serviços abertos nas máquinas alvo, confirmando a acessibilidade e a superfície de ataque.
